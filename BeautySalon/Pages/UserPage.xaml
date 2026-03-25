@@ -1,0 +1,194 @@
+﻿<Page x:Class="BeautySalon.Pages.UserPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      Title="Управление пользователями"
+      Background="White">
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="Управление пользователями" 
+                   FontSize="24" 
+                   FontWeight="Bold"
+                   Foreground="#FF333333"
+                   Margin="0,0,0,20"/>
+
+        <!-- Панель поиска и фильтрации -->
+        <Border Grid.Row="1" 
+                BorderBrush="#CCCCCC" 
+                BorderThickness="1"
+                CornerRadius="10"
+                Background="#F9F9F9"
+                Padding="15"
+                Margin="0,0,0,15">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Поиск -->
+                <TextBox x:Name="SearchBox" 
+                         Grid.Row="0"
+                         Grid.ColumnSpan="3"
+                         Tag="Поиск по логину..."
+                         GotFocus="SearchBox_GotFocus"
+                         LostFocus="SearchBox_LostFocus"
+                         TextChanged="SearchBox_TextChanged"
+                         Padding="10"
+                         Margin="0,0,0,10"
+                         Background="White"
+                         BorderBrush="#DDDDDD"
+                         BorderThickness="1"
+                         FontSize="14"/>
+
+                <!-- Фильтр по роли -->
+                <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" Margin="0,0,10,0">
+                    <TextBlock Text="Роль:" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                    <ComboBox x:Name="RoleFilterBox" 
+                              Width="150"
+                              Padding="5"
+                              Background="White"
+                              BorderBrush="#DDDDDD"
+                              SelectionChanged="RoleFilterBox_SelectionChanged"
+                              VerticalAlignment="Center"
+                              FontSize="12"/>
+                </StackPanel>
+
+                <!-- Кнопка сброса фильтров -->
+                <Button x:Name="ClearFilterButton" 
+                        Grid.Row="1" Grid.Column="1"
+                        Content="Очистить фильтры"
+                        Background="#FF9800"
+                        Foreground="White"
+                        Padding="10,6"
+                        BorderThickness="0"
+                        Cursor="Hand"
+                        Click="ClearFilterButton_Click"
+                        FontWeight="SemiBold"
+                        FontSize="12"
+                        VerticalAlignment="Center"/>
+
+                <!-- Кнопка добавления пользователя -->
+                <Button x:Name="AddUserButton" 
+                        Grid.Row="1" Grid.Column="2"
+                        Content="+ Добавить пользователя"
+                        Background="#4CAF50"
+                        Foreground="White"
+                        Padding="12,8"
+                        BorderThickness="0"
+                        Cursor="Hand"
+                        Click="AddUserButton_Click"
+                        FontWeight="SemiBold"
+                        FontSize="12"
+                        VerticalAlignment="Center"/>
+            </Grid>
+        </Border>
+
+        <!-- Кнопки быстрой фильтрации (по статусу) -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,0,0,15">
+            <Button Content="Все пользователи" 
+                    Click="QuickFilter_Click"
+                    Tag="all"
+                    Background="#E0E0E0"
+                    Padding="12,5"
+                    Margin="0,0,10,0"
+                    FontSize="12"/>
+            <Button Content="Заблокированные" 
+                    Click="QuickFilter_Click"
+                    Tag="blocked"
+                    Background="#E0E0E0"
+                    Padding="12,5"
+                    Margin="0,0,10,0"
+                    FontSize="12"/>
+            <Button Content="Активные" 
+                    Click="QuickFilter_Click"
+                    Tag="active"
+                    Background="#E0E0E0"
+                    Padding="12,5"
+                    Margin="0,0,10,0"
+                    FontSize="12"/>
+        </StackPanel>
+
+        <!-- Таблица пользователей -->
+        <DataGrid x:Name="UsersGrid" 
+                  Grid.Row="3"
+                  AutoGenerateColumns="False"
+                  CanUserAddRows="False"
+                  SelectionMode="Single"
+                  RowHeight="45"
+                  AlternatingRowBackground="#F9F9F9"
+                  BorderBrush="#E0E0E0"
+                  BorderThickness="1"
+                  GridLinesVisibility="Horizontal"
+                  FontSize="12">
+
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="ID" Binding="{Binding UserId}" Width="50"/>
+                <DataGridTextColumn Header="Логин" Binding="{Binding Login}" Width="150"/>
+                <DataGridTextColumn Header="Роль" Binding="{Binding RoleName}" Width="120"/>
+                <DataGridCheckBoxColumn Header="Заблокирован" Binding="{Binding Block}" Width="100"/>
+                <DataGridCheckBoxColumn Header="Первый вход" Binding="{Binding FirstAuth}" Width="100"/>
+
+                <DataGridTemplateColumn Header="Действия" Width="140">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                <Button Content="✏" 
+                                        Click="EditUserButton_Click"
+                                        Tag="{Binding UserId}"
+                                        Background="#FFC107"
+                                        Foreground="White"
+                                        Width="30"
+                                        Height="30"
+                                        Margin="0,0,5,0"
+                                        Cursor="Hand"
+                                        FontSize="12"
+                                        ToolTip="Редактировать"/>
+                                <Button Content="🔓" 
+                                        Click="UnblockUserButton_Click"
+                                        Tag="{Binding UserId}"
+                                        Background="#4CAF50"
+                                        Foreground="White"
+                                        Width="30"
+                                        Height="30"
+                                        Margin="0,0,5,0"
+                                        Cursor="Hand"
+                                        FontSize="12"
+                                        ToolTip="Разблокировать"
+                                        Visibility="{Binding Block, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                                <Button Content="🗑" 
+                                        Click="DeleteUserButton_Click"
+                                        Tag="{Binding UserId}"
+                                        Background="#F44336"
+                                        Foreground="White"
+                                        Width="30"
+                                        Height="30"
+                                        Cursor="Hand"
+                                        FontSize="12"
+                                        ToolTip="Удалить"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <TextBlock x:Name="StatusText" 
+                   Grid.Row="3"
+                   VerticalAlignment="Bottom"
+                   Foreground="Gray"
+                   FontSize="11"
+                   Margin="0,5,0,0"/>
+    </Grid>
+</Page>

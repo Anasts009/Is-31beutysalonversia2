@@ -1,0 +1,224 @@
+﻿<Page x:Class="BeautySalon.Pages.RegistrationsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      Title="Управление записями"
+      Background="White"
+      Loaded="RegistrationsPage_Loaded">
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="Управление записями" 
+                   FontSize="24" 
+                   FontWeight="Bold"
+                   Foreground="#FF333333"
+                   Margin="0,0,0,20"/>
+
+        <!-- Панель поиска, фильтрации и сортировки -->
+        <Border Grid.Row="1" 
+                BorderBrush="#CCCCCC" 
+                BorderThickness="1"
+                CornerRadius="10"
+                Background="#F9F9F9"
+                Padding="15"
+                Margin="0,0,0,15">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Поиск -->
+                <TextBox x:Name="SearchBox" 
+                         Grid.Row="0"
+                         Grid.ColumnSpan="3"
+                         Tag="Поиск по клиенту, сотруднику или номеру..."
+                         GotFocus="SearchBox_GotFocus"
+                         LostFocus="SearchBox_LostFocus"
+                         TextChanged="SearchBox_TextChanged"
+                         Padding="10"
+                         Margin="0,0,0,10"
+                         Background="White"
+                         BorderBrush="#DDDDDD"
+                         BorderThickness="1"
+                         FontSize="14"/>
+
+                <!-- Фильтры -->
+                <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" Margin="0,0,10,0">
+                    <TextBlock Text="Дата:" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                    <DatePicker x:Name="FilterDatePicker" 
+                                Width="130"
+                                SelectedDateChanged="FilterDatePicker_SelectedDateChanged"
+                                VerticalAlignment="Center"/>
+
+                    <TextBlock Text="Сумма от:" VerticalAlignment="Center" Margin="15,0,5,0"/>
+                    <TextBox x:Name="SumFromBox" 
+                             Width="80" 
+                             Padding="5"
+                             TextChanged="SumFilter_TextChanged"
+                             VerticalAlignment="Center"/>
+                    <TextBlock Text="до:" VerticalAlignment="Center" Margin="5,0,5,0"/>
+                    <TextBox x:Name="SumToBox" 
+                             Width="80" 
+                             Padding="5"
+                             TextChanged="SumFilter_TextChanged"
+                             VerticalAlignment="Center"/>
+                    <TextBlock Text="₽" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                </StackPanel>
+
+                <!-- Сортировка -->
+                <ComboBox x:Name="SortBox" 
+                          Grid.Row="1" Grid.Column="1"
+                          Width="160"
+                          Margin="0,0,10,0"
+                          Padding="8"
+                          Background="White"
+                          BorderBrush="#DDDDDD"
+                          SelectionChanged="SortBox_SelectionChanged"
+                          VerticalAlignment="Center">
+                    <ComboBoxItem Content="По дате (новые)" IsSelected="True"/>
+                    <ComboBoxItem Content="По дате (старые)"/>
+                    <ComboBoxItem Content="По клиенту (А-Я)"/>
+                    <ComboBoxItem Content="По клиенту (Я-А)"/>
+                    <ComboBoxItem Content="По сумме (возрастание)"/>
+                    <ComboBoxItem Content="По сумме (убывание)"/>
+                </ComboBox>
+
+                <!-- Кнопка сброса -->
+                <Button x:Name="ClearFilterButton" 
+                        Grid.Row="1" Grid.Column="2"
+                        Content="Очистить фильтры"
+                        Background="#FF9800"
+                        Foreground="White"
+                        Padding="12,8"
+                        BorderThickness="0"
+                        Cursor="Hand"
+                        Click="ClearFilterButton_Click"
+                        FontWeight="SemiBold"
+                        VerticalAlignment="Center"/>
+            </Grid>
+        </Border>
+
+        <!-- Кнопки быстрой фильтрации -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,0,0,15">
+            <Button Content="Все записи" 
+                    Click="QuickDateFilter_Click"
+                    Tag="all"
+                    Background="#E0E0E0"
+                    Padding="15,5"
+                    Margin="0,0,10,0"/>
+            <Button Content="Сегодня" 
+                    Click="QuickDateFilter_Click"
+                    Tag="today"
+                    Background="#E0E0E0"
+                    Padding="15,5"
+                    Margin="0,0,10,0"/>
+            <Button Content="Эта неделя" 
+                    Click="QuickDateFilter_Click"
+                    Tag="week"
+                    Background="#E0E0E0"
+                    Padding="15,5"
+                    Margin="0,0,10,0"/>
+            <Button Content="Этот месяц" 
+                    Click="QuickDateFilter_Click"
+                    Tag="month"
+                    Background="#E0E0E0"
+                    Padding="15,5"
+                    Margin="0,0,10,0"/>
+        </StackPanel>
+
+        <!-- Таблица записей -->
+        <DataGrid x:Name="RegistrationsGrid" 
+                  Grid.Row="3"
+                  AutoGenerateColumns="False"
+                  CanUserAddRows="False"
+                  CanUserDeleteRows="False"
+                  SelectionMode="Single"
+                  RowHeight="60"
+                  Margin="0,0,0,10"
+                  AlternatingRowBackground="#F9F9F9"
+                  BorderBrush="#E0E0E0"
+                  BorderThickness="1"
+                  GridLinesVisibility="Horizontal">
+
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="№" 
+                                    Binding="{Binding RegistrationId}" 
+                                    Width="60"/>
+
+                <DataGridTextColumn Header="Клиент" 
+                                    Binding="{Binding ClientName}" 
+                                    Width="180"/>
+
+                <DataGridTextColumn Header="Сотрудник" 
+                                    Binding="{Binding EmployeeName}" 
+                                    Width="180"/>
+
+                <DataGridTextColumn Header="Номер" 
+                                    Binding="{Binding Number}" 
+                                    Width="120"/>
+
+                <DataGridTextColumn Header="Дата" 
+                                    Binding="{Binding DateDisplay}" 
+                                    Width="140"/>
+
+                <DataGridTextColumn Header="Услуги" 
+                                    Binding="{Binding Services}" 
+                                    Width="300"
+                                    ElementStyle="{StaticResource WrapTextStyle}"/>
+
+                <DataGridTextColumn Header="Сумма (₽)" 
+                                    Binding="{Binding TotalSum, StringFormat=N0}" 
+                                    Width="100"/>
+
+                <DataGridTemplateColumn x:Name="ActionsColumn" Header="Действия" Width="90">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Content="🗑 Удалить" 
+                                    Click="DeleteButton_Click"
+                                    Tag="{Binding RegistrationId}"
+                                    Background="#F44336"
+                                    Foreground="White"
+                                    Padding="8,5"
+                                    Cursor="Hand"
+                                    FontSize="11"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <!-- Нижняя панель с кнопкой добавления, статусом и кнопкой назад -->
+        <StackPanel Grid.Row="4" 
+            Orientation="Horizontal" 
+            HorizontalAlignment="Center" 
+            Margin="0,5,0,0">
+            <Button x:Name="AddButton" 
+            Content="+ Добавить запись"
+            Background="#4CAF50"
+            Foreground="White"
+            Padding="12,8"
+            BorderThickness="0"
+            Cursor="Hand"
+            Click="AddButton_Click"
+            FontSize="12"
+            FontWeight="SemiBold"
+            Visibility="Collapsed"/>
+            <TextBlock x:Name="StatusText" 
+               Foreground="Gray"
+               FontSize="11"
+               VerticalAlignment="Center"/>
+        </StackPanel>
+    </Grid>
+</Page>

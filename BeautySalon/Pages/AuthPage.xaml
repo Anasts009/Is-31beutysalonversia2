@@ -1,0 +1,24 @@
+﻿<Page x:Class="BeautySalon.Pages.AuthPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:BeautySalon.Pages"
+      mc:Ignorable="d" 
+      d:DesignHeight="500" d:DesignWidth="900"
+      Title="Авторизация">
+
+    <Grid>
+        <StackPanel Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <StackPanel Orientation="Horizontal" Width="500" Margin="10">
+                <TextBlock Text="Введите логин:" Width="200" Foreground="PaleVioletRed" TextAlignment="Left" VerticalAlignment="Center" FontSize="25"></TextBlock>
+                <TextBox x:Name="TBoxLogin" Width="300" FontSize="20" Foreground="IndianRed"></TextBox>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Width="500" Margin="10">
+                <TextBlock Text="Введите пароль:" Width="200" Foreground="PaleVioletRed" TextAlignment="Left" VerticalAlignment="Center" FontSize="25"></TextBlock>
+                <PasswordBox x:Name="TBoxPassword" Width="300" FontSize="20" Foreground="IndianRed"></PasswordBox>
+            </StackPanel>
+            <Button HorizontalAlignment="Center" Click="BtnLogin_Click" Content="ВОЙТИ" x:Name="BtnLogin" FontSize="25" Width="500" Height="70"/>
+        </StackPanel>
+    </Grid>
+</Page>

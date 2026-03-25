@@ -1,0 +1,251 @@
+﻿<Page x:Class="BeautySalon.Pages.EmployeesPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:local="clr-namespace:BeautySalon.Pages"
+      Title="Управление сотрудниками"
+      Background="White"
+      Width="Auto"
+      Height="Auto">
+
+    <Page.Resources>
+        <local:BlockStatusConverter x:Key="BlockStatusConverter"/>
+        <local:BlockColorConverter x:Key="BlockColorConverter"/>
+    </Page.Resources>
+
+    <Grid Margin="15">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="Управление сотрудниками" 
+                   FontSize="20" 
+                   FontWeight="Bold"
+                   Foreground="#FF333333"
+                   Margin="0,0,0,15"/>
+
+        <!-- Панель поиска и фильтрации -->
+        <Border Grid.Row="1" 
+                BorderBrush="#CCCCCC" 
+                BorderThickness="1"
+                CornerRadius="8"
+                Background="#F9F9F9"
+                Padding="12"
+                Margin="0,0,0,12">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Поиск -->
+                <TextBox x:Name="SearchBox" 
+                         Grid.Row="0"
+                         Grid.ColumnSpan="2"
+                         Tag="Поиск по имени или фамилии..."
+                         GotFocus="SearchBox_GotFocus"
+                         LostFocus="SearchBox_LostFocus"
+                         TextChanged="SearchBox_TextChanged"
+                         Padding="8"
+                         Margin="0,0,0,8"
+                         Background="White"
+                         BorderBrush="#DDDDDD"
+                         BorderThickness="1"
+                         FontSize="12"/>
+
+                <!-- Фильтр по должности -->
+                <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" Margin="0,0,10,0">
+                    <TextBlock Text="Должность:" VerticalAlignment="Center" Margin="0,0,8,0" FontSize="12"/>
+                    <ComboBox x:Name="PositionFilterBox" 
+                              Width="150"
+                              Padding="6"
+                              Background="White"
+                              BorderBrush="#DDDDDD"
+                              SelectionChanged="PositionFilterBox_SelectionChanged"
+                              VerticalAlignment="Center"
+                              FontSize="12"/>
+                </StackPanel>
+
+                <!-- Кнопка сброса -->
+                <Button x:Name="ClearFilterButton" 
+                        Grid.Row="1" Grid.Column="1"
+                        Content="Очистить фильтры"
+                        Background="#FF9800"
+                        Foreground="White"
+                        Padding="10,6"
+                        BorderThickness="0"
+                        Cursor="Hand"
+                        Click="ClearFilterButton_Click"
+                        FontWeight="SemiBold"
+                        FontSize="12"
+                        VerticalAlignment="Center"/>
+            </Grid>
+        </Border>
+
+        <!-- Кнопки быстрого поиска -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,0,0,12">
+            <Button Content="Все сотрудники" 
+                    Click="QuickSearch_Click"
+                    Tag="all"
+                    Background="#E0E0E0"
+                    Padding="12,5"
+                    Margin="0,0,8,0"
+                    FontSize="12"/>
+            <Button Content="Администраторы" 
+                    Click="QuickSearch_Click"
+                    Tag="admin"
+                    Background="#E0E0E0"
+                    Padding="12,5"
+                    Margin="0,0,8,0"
+                    FontSize="12"/>
+            <Button Content="Мастера" 
+                    Click="QuickSearch_Click"
+                    Tag="master"
+                    Background="#E0E0E0"
+                    Padding="12,5"
+                    Margin="0,0,8,0"
+                    FontSize="12"/>
+            <Button Content="Заблокированные" 
+                    Click="QuickSearch_Click"
+                    Tag="blocked"
+                    Background="#E0E0E0"
+                    Padding="12,5"
+                    Margin="0,0,8,0"
+                    FontSize="12"/>
+        </StackPanel>
+
+        <!-- Таблица сотрудников -->
+        <DataGrid x:Name="EmployeesGrid" 
+                  Grid.Row="3"
+                  AutoGenerateColumns="False"
+                  CanUserAddRows="False"
+                  CanUserDeleteRows="False"
+                  SelectionMode="Single"
+                  RowHeight="40"
+                  Margin="0,0,0,10"
+                  AlternatingRowBackground="#F9F9F9"
+                  BorderBrush="#E0E0E0"
+                  BorderThickness="1"
+                  GridLinesVisibility="Horizontal"
+                  FontSize="12"
+                  HorizontalAlignment="Stretch"
+                  HorizontalContentAlignment="Stretch">
+
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="ID" 
+                                    Binding="{Binding EmployeeId}" 
+                                    Width="50"/>
+
+                <DataGridTextColumn Header="Имя" 
+                                    Binding="{Binding Firstname}" 
+                                    Width="*"
+                                    MinWidth="80"/>
+
+                <DataGridTextColumn Header="Фамилия" 
+                                    Binding="{Binding Lastname}" 
+                                    Width="*"
+                                    MinWidth="80"/>
+
+                <DataGridTextColumn Header="Должность" 
+                                    Binding="{Binding Post.PostName}" 
+                                    Width="*"
+                                    MinWidth="100"/>
+
+                <DataGridTextColumn Header="Кабинет" 
+                                    Binding="{Binding Cabinet.NameCabinet}" 
+                                    Width="*"
+                                    MinWidth="80"/>
+
+                <DataGridTextColumn Header="Телефон" 
+                                    Binding="{Binding Phone}" 
+                                    Width="*"
+                                    MinWidth="100"/>
+
+                <DataGridTextColumn Header="Логин" 
+                                    Binding="{Binding User.Login}" 
+                                    Width="*"
+                                    MinWidth="80"/>
+
+                <DataGridTemplateColumn Header="Статус" Width="80">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding User.Block, Converter={StaticResource BlockStatusConverter}}"
+                                       Foreground="{Binding User.Block, Converter={StaticResource BlockColorConverter}}"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"
+                                       FontSize="11"
+                                       FontWeight="SemiBold"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTemplateColumn Header="Действия" Width="100">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                <Button Content="✏" 
+                                        Click="EditButton_Click"
+                                        Tag="{Binding EmployeeId}"
+                                        Background="#2196F3"
+                                        Foreground="White"
+                                        Width="28"
+                                        Height="28"
+                                        Margin="0,0,5,0"
+                                        Cursor="Hand"
+                                        FontSize="12"
+                                        ToolTip="Редактировать"/>
+                                <Button Content="🗑" 
+                                        Click="DeleteButton_Click"
+                                        Tag="{Binding EmployeeId}"
+                                        Background="#F44336"
+                                        Foreground="White"
+                                        Width="28"
+                                        Height="28"
+                                        Cursor="Hand"
+                                        FontSize="12"
+                                        ToolTip="Удалить"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <!-- Нижняя панель с кнопками -->
+        <Grid Grid.Row="4" Margin="0,5,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Кнопка добавления сотрудника слева -->
+            <Button x:Name="AddButton" 
+                    Grid.Column="0"
+                    Content="+ Добавить сотрудника"
+                    Background="#4CAF50"
+                    Foreground="White"
+                    Padding="12,8"
+                    BorderThickness="0"
+                    Cursor="Hand"
+                    Click="AddButton_Click"
+                    FontSize="12"
+                    FontWeight="SemiBold"/>
+
+            <!-- Статус по центру -->
+            <TextBlock x:Name="StatusText" 
+                       Grid.Column="1"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       Foreground="Gray"
+                       FontSize="11"/>
+        </Grid>
+    </Grid>
+</Page>
